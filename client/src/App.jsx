@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import "./App.css";
 const App = () => {
   const [document, setDocument] = useState("");
   const [socket, setSocket] = useState(null);
@@ -15,9 +15,7 @@ const App = () => {
     newSocket.onmessage = (message) => {
       try {
         const parseMessage = JSON.parse(message.data);
-        if (parseMessage.type === "init") {
-          setDocument(parseMessage.data);
-        } else if (message.type === "update") {
+        if (parseMessage.type === "init" || parseMessage.type === "update") {
           setDocument(parseMessage.data);
         }
       } catch (error) {
@@ -25,7 +23,7 @@ const App = () => {
       }
     };
 
-    newSocket.close = () => {
+    newSocket.onclose = () => {
       console.log("Web Socket connection closed");
     };
     newSocket.onerror = (error) => {
@@ -51,10 +49,11 @@ const App = () => {
   };
   return (
     <>
-      <div>
-        <h1>Collaborative Editor</h1>
-        <div>
+      <div className="container">
+        <h1 className="title">Collaborative Editor</h1>
+        <div className="editor">
           <textarea
+            className="textarea"
             name="editor"
             id="editor"
             cols="30"
@@ -63,6 +62,7 @@ const App = () => {
             onChange={handleChange}
           ></textarea>
         </div>
+        <div className="footer">All Rights Reserved @ Pradeep Kumar</div>
       </div>
     </>
   );
